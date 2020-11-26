@@ -2437,10 +2437,13 @@
 
 var selectedBook =[];
 var currentIndex = 0;
+var timerMax = 31;
+var timerRef;
 
 function startTrivia() {
     
 	console.log(document.getElementById("ddlBibleBook").value);
+    timerMax = 30;
 
 	var selectedBookFilter = document.getElementById("ddlBibleBook").value;
     document.getElementById("divMessage").style.display='none';
@@ -2524,7 +2527,9 @@ function showAnswer(){
 
 function renderQuestion(indexSent)
 {
-
+    timerMax = 31;
+    clearInterval(timerRef);
+    moveTimer();
 	var out = "";
 
 	if(document.getElementById("ddlBibleBook").value == 'Random'){
@@ -2558,6 +2563,7 @@ function renderQuestion(indexSent)
 		out += '<div id="divAnswer" style="visibility:hidden;"> Answer: &nbsp;&nbsp;'+ selectedBook[indexSent].Answer+' </div>';
 
 		document.getElementById("id01").innerHTML = out;
+        timerRef = setInterval(moveTimer, 1000);
 }
 function displayMessage(txt)
 {
@@ -2568,6 +2574,19 @@ function displayMessage(txt)
 
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min) ) + min;
+}
+
+function moveTimer(){
+    timerMax--;
+    if(timerMax <=0){
+        document.getElementById("divTimer").innerHTML = 'Expired';
+        clearInterval(timerRef);
+    }
+    else
+        {
+            document.getElementById("divTimer").innerHTML = timerMax + ' seconds';
+        }
+    
 }
 
 </script>
@@ -2640,6 +2659,10 @@ function getRndInteger(min, max) {
 			padding: 30px 0px;
 			height: 400px;
 		}
+        #divTimer{
+            font-size: 24px;
+            font-weight: 600;
+        }
 </style>
 </head>
 <body>
@@ -2678,6 +2701,7 @@ function getRndInteger(min, max) {
 	<div id="divMessage" style="display:none;"></div>
 	<div id="id01"></div>
 
+    <div id="divTimer"></div>
 	<div style="margin-top:10px;">
 	<input type="submit" name="Next" class="button button2" onclick="nextQuestion()" value="Next" />
 	</div>
